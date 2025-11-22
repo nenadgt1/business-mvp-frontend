@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="about:blank">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SportSphere - Your Gateway to Live Sports</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    :root{
+      --primary-color:#00c6ff;--secondary-color:#0072ff;--text-color:#ffffff;--text-color-dark:#e0e0e0;
+      --bg-color:#0c0a1f;--glass-bg:rgba(20,20,40,.4);--glass-border:rgba(255,255,255,.15);--shadow-color:rgba(0,0,0,.2);
+      --font-family:'Poppins',sans-serif;
+      /* explicit header height for small iframes */
+      --header-h: clamp(56px, 8vh, 84px);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:var(--font-family);background-color:var(--bg-color);color:var(--text-color);
+      background-image:
+        radial-gradient(circle at 1% 1%, var(--secondary-color), transparent 30%),
+        radial-gradient(circle at 99% 99%, var(--primary-color), transparent 40%);
+      background-attachment:fixed;line-height:1.6;overflow-x:hidden;
+      padding-top:var(--header-h); /* keep content below the fixed header */
+    }
+
+    .container{max-width:1200px;margin:0 auto;padding:0 2rem}
+    .section-padding{padding:clamp(2.8rem,6vh,6rem) 0}
+    .section-title{
+      text-align:center;font-size:clamp(1.4rem,3.6vw,2.4rem);font-weight:600;margin-bottom:2rem;
+      background:linear-gradient(90deg,var(--primary-color),var(--secondary-color));
+      -webkit-background-clip:text;background-clip:text;color:transparent
+    }
+
+    .btn{display:inline-block;padding:.8rem 1.8rem;border:none;border-radius:50px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .3s ease}
+    .btn-primary{background:linear-gradient(90deg,var(--primary-color),var(--secondary-color));color:var(--text-color);box-shadow:0 4px 15px rgba(0,157,255,.3)}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,157,255,.4)}
+
+    .glass-card{background:var(--glass-bg);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid var(--glass-border);border-radius:1rem;box-shadow:0 8px 32px 0 var(--shadow-color);transition:transform .3s ease,box-shadow .3s ease}
+    .glass-card:hover{transform:translateY(-10px);box-shadow:0 16px 40px 0 rgba(0,0,0,.3)}
+    .reveal{opacity:0;transform:translateY(50px);transition:opacity .6s ease-out,transform .6s ease-out}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Header */
+    .main-header{
+      position:fixed;top:0;left:0;width:100%;z-index:1000;padding:.8rem 0;
+      transition:background .3s ease,backdrop-filter .3s ease;
+      min-height:var(--header-h); display:flex; align-items:center;
+    }
+    .main-header.scrolled{background:var(--glass-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--glass-border)}
+    .main-header .container{display:flex;justify-content:space-between;align-items:center}
+    .logo{font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:700;text-decoration:none;color:var(--text-color)}
+    .main-nav ul{display:flex;list-style:none}
+    .main-nav ul li{margin-left:clamp(1rem,2.5vw,2rem)}
+    .main-nav ul li a{text-decoration:none;color:var(--text-color-dark);font-weight:500;transition:color .3s ease;position:relative;padding-bottom:5px}
+    .main-nav ul li a::after{content:'';position:absolute;width:0;height:2px;bottom:0;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--primary-color),var(--secondary-color));transition:width .3s ease}
+    .main-nav ul li a:hover::after{width:100%}
+    .main-nav ul li a:hover{color:var(--text-color)}
+    .menu-toggle{display:none;cursor:pointer;z-index:1001}
+    .menu-toggle .bar{width:25px;height:3px;background:var(--text-color);margin:5px 0;transition:all .3s ease-in-out;border-radius:2px}
+
+    /* Hero – push content down, avoid clipping in short iframes */
+    .hero{
+      height:clamp(420px, 70vh, 600px);
+      display:flex;align-items:flex-start;justify-content:center;text-align:center;position:relative;overflow:hidden;
+      padding-top:calc(8px + 2vh); /* extra breathing room below top edge */
+    }
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background:url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=85&fm=jpg&crop=entropy&cs=srgb&w=1920') center/cover no-repeat;
+      filter:brightness(.4);z-index:-1
+    }
+    .hero-content{max-width:800px;padding:0 1rem;margin-top:calc(var(--header-h) * .12)} /* tiny offset insurance */
+    .hero-content h1{
+      font-size:clamp(1.8rem, 4.8vw, 2.6rem);
+      font-weight:700;line-height:1.15;margin-bottom:1rem;text-shadow:0 4px 10px rgba(0,0,0,.5)
+    }
+    .hero-content p{font-size:clamp(1rem,1.1vw + .15rem,1.2rem);color:var(--text-color-dark);margin-bottom:1.2rem}
+    .search-bar{display:flex;background:var(--glass-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:50px;padding:.5rem;max-width:600px;margin:0 auto}
+    .search-bar input{flex:1;background:transparent;border:none;outline:none;color:var(--text-color);font-size:1rem;padding:0 1.5rem;font-family:var(--font-family)}
+    .search-bar input::placeholder{color:var(--text-color-dark)}
+    .search-bar .btn{padding:.6rem 1.6rem}
+
+    /* Cards/Grids */
+    .events-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem}
+    .event-card{padding:0;overflow:hidden;display:flex;flex-direction:column}
+    .event-card-img{height:200px;width:100%;object-fit:cover}
+    .event-card-content{padding:1.25rem;flex-grow:1;display:flex;flex-direction:column}
+    .event-card-content h3{font-size:1.2rem;margin-bottom:.5rem}
+    .event-card-info{display:flex;align-items:center;gap:.5rem;color:var(--text-color-dark);margin-bottom:1.1rem;font-size:.9rem}
+    .event-card-info svg{width:16px;height:16px;opacity:.7}
+    .event-card .btn{width:100%;text-align:center;margin-top:auto}
+
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+    .feature-card{text-align:center;padding:2.1rem 1.6rem}
+    .feature-icon{margin-bottom:1.25rem}
+    .feature-icon svg{width:56px;height:56px;stroke:var(--primary-color);filter:drop-shadow(0 0 10px var(--primary-color))}
+    .feature-card p{color:var(--text-color-dark)}
+
+    .sports-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1.5rem}
+    .sport-category{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;cursor:pointer;text-align:center;position:relative}
+    .sport-category::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));filter:blur(20px);opacity:0;transition:opacity .4s ease}
+    .sport-category:hover::before{opacity:.5}
+    .sport-icon{width:50px;height:50px;margin-bottom:1rem;transition:transform .3s ease;position:relative;z-index:1}
+    .sport-icon svg{width:100%;height:100%;fill:var(--text-color)}
+    .sport-category:hover .sport-icon{transform:scale(1.1)}
+    .sport-category span{font-weight:500;position:relative;z-index:1}
+
+    /* Footer */
+    .main-footer{background:#080618;padding:3rem 0 2rem;border-top:1px solid var(--glass-border)}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+    .footer-about h4{font-size:1.4rem;margin-bottom:1rem}
+    .footer-about p{color:var(--text-color-dark);max-width:350px}
+    .footer-links h5{font-size:1.05rem;margin-bottom:1rem}
+    .footer-links ul{list-style:none}
+    .footer-links ul li a{color:var(--text-color-dark);text-decoration:none;transition:color .3s ease}
+    .footer-links ul li a:hover{color:var(--primary-color)}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--glass-border);padding-top:1.6rem}
+    .social-icons a{color:var(--text-color-dark);margin-left:1rem;font-size:1.2rem;transition:color .3s ease}
+    .social-icons a:hover{color:var(--primary-color)}
+    .social-icons svg{width:24px;height:24px;fill:currentColor}
+
+    /* Embed/small-height polish */
+    @media (max-height:720px),(max-width:992px){
+      .main-header{background:var(--glass-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--glass-border)}
+      .main-nav ul li{margin-left:1.25rem}
+      .hero{padding-top:calc(16px + 3vh)} /* push content more on short canvases */
+      .hero-content h1{font-size:clamp(1.6rem, 4.2vw, 2.3rem)}
+    }
+
+    /* Tablet/phone */
+    @media (max-width:992px){.features-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:768px){
+      .container{padding:0 1rem}
+      .main-nav{
+        position:fixed;top:0;right:-100%;width:70%;height:100vh;background:var(--glass-bg);
+        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;flex-direction:column;justify-content:center;align-items:center;transition:right .4s cubic-bezier(.23,1,.32,1)
+      }
+      .main-nav.active{right:0}
+      .main-nav ul{flex-direction:column;text-align:center}
+      .main-nav ul li{margin:1.25rem 0}
+      .main-nav ul li a{font-size:1.1rem}
+      .menu-toggle{display:block}
+      .menu-toggle.active .bar:nth-child(1){transform:rotate(-45deg) translate(-5px,6px)}
+      .menu-toggle.active .bar:nth-child(2){opacity:0}
+      .menu-toggle.active .bar:nth-child(3){transform:rotate(45deg) translate(-5px,-6px)}
+      .hero-content h1{font-size:2rem}
+      .hero-content p{font-size:.98rem}
+      .search-bar{flex-direction:column;gap:.5rem;padding:1rem;border-radius:1rem;background:none;border:none;backdrop-filter:none}
+      .search-bar input{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:50px;padding:.8rem 1.5rem;width:100%}
+      .footer-grid{grid-template-columns:1fr;text-align:center}
+      .footer-about p{margin:0 auto}
+      .footer-bottom{flex-direction:column;gap:1.2rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header" id="main-header">
+    <div class="container">
+      <a href="#" class="logo">SportSphere</a>
+      <nav class="main-nav" id="main-nav">
+        <ul>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#sports">Sports</a></li>
+          <li><a href="#why-us">About</a></li>
+          <li><a href="#" class="btn btn-primary">Sign In</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle" id="menu-toggle">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content reveal visible">
+        <h1>Your Gateway to Live Sports</h1>
+        <p>Discover, book, and experience the thrill of the game. Unforgettable moments are just a click away.</p>
+        <div class="search-bar">
+          <input type="text" placeholder="Search for events, teams, or venues...">
+          <button class="btn btn-primary">Find Tickets</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="events" class="section-padding">
+      <div class="container">
+        <h2 class="section-title reveal">Featured Events</h2>
+        <div class="events-grid">
+          <article class="glass-card event-card reveal">
+            <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=600&q=85" alt="Soccer ball on green stadium field" class="event-card-img" onerror="this.onerror=null;this.src='/fallback1.jpg'">
+            <div class="event-card-content">
+              <h3>Champions League Final</h3>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2z"/></svg><span>Manchester vs. Madrid</span></div>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2zm-2 8H9V9h6v2z"/></svg><span>June 1st, Wembley Stadium</span></div>
+              <a href="#" class="btn btn-primary">Buy Tickets</a>
+            </div>
+          </article>
+
+          <article class="glass-card event-card reveal" style="transition-delay:.1s">
+            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=600&q=85" alt="Basketball flying towards the hoop" class="event-card-img" onerror="this.onerror=null;this.src='/fallback2.jpg'">
+            <div class="event-card-content">
+              <h3>NBA Finals: Game 7</h3>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2z"/></svg><span>Lakers vs. Celtics</span></div>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2zm-2 8H9V9h6v2z"/></svg><span>June 15th, TD Garden</span></div>
+              <a href="#" class="btn btn-primary">Buy Tickets</a>
+            </div>
+          </article>
+
+          <article class="glass-card event-card reveal" style="transition-delay:.2s">
+            <img src="/fallback1.jpg" alt="Tennis player serving" class="event-card-img">
+            <div class="event-card-content">
+              <h3>US Open Finals</h3>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2z"/></svg><span>Men's Singles Championship</span></div>
+              <div class="event-card-info"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7C5.895 3 5 3.895 5 5v16l7-3 7 3V5c0-1.105-.895-2-2-2zm-2 8H9V9h6v2z"/></svg><span>Sep 8th, Arthur Ashe Stadium</span></div>
+              <a href="#" class="btn btn-primary">Buy Tickets</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-us" class="section-padding">
+      <div class="container">
+        <h2 class="section-title reveal">Why SportSphere?</h2>
+        <div class="features-grid">
+          <div class="glass-card feature-card reveal">
+            <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+            <h3>Vast Selection</h3><p>Access thousands of events from major leagues to local games, all in one place.</p>
+          </div>
+          <div class="glass-card feature-card reveal" style="transition-delay:.1s">
+            <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.826-1.106-2.303 0-3.182s2.9-.826 4.006 0l.415.309m-2.126-6.354v.255A2.25 2.25 0 0 1 12 6.75v.255a2.25 2.25 0 0 1-2.126 2.126v.255A2.25 2.25 0 0 1 12 11.75v.255a2.25 2.25 0 0 1 2.126 2.126v.255A2.25 2.25 0 0 1 12 16.75v.255a2.25 2.25 0 0 1-2.126 2.126v.255"/></svg></div>
+            <h3>Best Price Guarantee</h3><p>We work with trusted partners to find you the best deals and most competitive prices.</p>
+          </div>
+          <div class="glass-card feature-card reveal" style="transition-delay:.2s">
+            <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
+            <h3>Secure &amp; Easy Checkout</h3><p>Enjoy a seamless and fully-encrypted ticket buying experience from start to finish.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sports" class="section-padding">
+      <div class="container">
+        <h2 class="section-title reveal">Browse by Sport</h2>
+        <div class="sports-grid">
+          <div class="glass-card sport-category reveal"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2Z"/></svg></div><span>Football</span></div>
+          <div class="glass-card sport-category reveal" style="transition-delay:.05s"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2Z"/></svg></div><span>Basketball</span></div>
+          <div class="glass-card sport-category reveal" style="transition-delay:.1s"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M13,2L15,9H18V10C18,12.1 16.6,13.8 14.6,14.1L12.5,18.3L15,19.5L14.3,21.4L9.7,19.4L7.7,21.4L7,19.5L9.5,18.3L7.4,14.1C5.4,13.8 4,12.1 4,10V9H7L8,2.9C8.1,2.4 8.5,2 9,2H13Z"/></svg></div><span>F1 Racing</span></div>
+          <div class="glass-card sport-category reveal" style="transition-delay:.15s"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M19,3H15L12,6L9,3H5V9L8,12L5,15V19H9L12,18L15,21H19V15L22,12L19,9V3Z"/></svg></div><span>Tennis</span></div>
+          <div class="glass-card sport-category reveal" style="transition-delay:.2s"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M15.1,10.5C14.8,10.5 14.5,10.6 14.3,10.8L10.6,9.2C10.7,8.9 10.7,8.6 10.7,8.3C10.7,8 10.7,7.7 10.6,7.4L14.3,5.8C14.5,6.1 14.8,6.2 15.1,6.2C16.1,6.2 16.8,5.4 16.8,4.5C16.8,3.6 16.1,2.8 15.1,2.8C14.2,2.8 13.4,3.6 13.4,4.5C13.4,4.8 13.5,5.1 13.7,5.4L10,7C9.7,6.8 9.4,6.6 9.1,6.6C8.8,6.6 8.5,6.7 8.2,6.8L4.3,4.6C4.4,4.4 4.5,4.1 4.5,3.8C4.5,2.8 3.7,2 2.8,2C1.8,2 1,2.8 1,3.8C1,4.7 1.8,5.5 2.8,5.5C3.1,5.5 3.4,5.4 3.6,5.2L7.5,7.4C7.4,7.7 7.4,8 7.4,8.3C7.4,8.6 7.4,8.9 7.5,9.2L3.6,11.4C3.4,11.2 3.1,11.1 2.8,11.1C1.8,11.1 1,11.9 1,12.9C1,13.8 1.8,14.6 2.8,14.6C3.7,14.6 4.5,13.8 4.5,12.9C4.5,12.6 4.4,12.2 4.3,12L8.2,9.8C8.5,10 8.8,10.1 9.1,10.1C9.4,10.1 9.7,10 10,9.6L13.7,11.2C13.5,11.5 13.4,11.8 13.4,12.1C13.4,13.1 14.2,13.8 15.1,13.8C16.1,13.8 16.8,13.1 16.8,12.1C16.8,11.2 16.1,10.5 15.1,10.5"/></svg></div><span>Boxing</span></div>
+          <div class="glass-card sport-category reveal" style="transition-delay:.25s"><div class="sport-icon"><svg viewBox="0 0 24 24"><path d="M12.1,21.9L9.9,21.8C4.5,21.5 2.1,15.7 4.2,11.3C5.1,9.4 6.2,8 7.3,7C9.2,5.2 11,4.9 12,5.2C13.1,4.9 14.8,5.2 16.7,7C17.8,8 18.9,9.4 19.8,11.3C21.9,15.7 19.5,21.5 14.1,21.8"/></svg></div><span>Baseball</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about"><h4>SportSphere</h4><p>Your destination for sports event tickets — seamless booking that brings you closer to the action.</p></div>
+        <div class="footer-links"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+        <div class="footer-links"><h5>Support</h5><ul><li><a href="#">FAQ</a></li><li><a href="#">Help Center</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+        <div class="footer-links"><h5>Events</h5><ul><li><a href="#">Football</a></li><li><a href="#">Basketball</a></li><li><a href="#">Tennis</a></li><li><a href="#">F1 Racing</a></li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 SportSphere. All Rights Reserved.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"></path></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 1 1-5 5 5 5 0 0 1 5-5"></path></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z"></path></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const header=document.getElementById('main-header');
+      window.addEventListener('scroll',()=>{if(window.scrollY>50){header.classList.add('scrolled')}else{header.classList.remove('scrolled')}});
+
+      const menuToggle=document.getElementById('menu-toggle');
+      const mainNav=document.getElementById('main-nav');
+      const navLinks=mainNav.querySelectorAll('a');
+      menuToggle.addEventListener('click',()=>{menuToggle.classList.toggle('active'); mainNav.classList.toggle('active');});
+      navLinks.forEach(l=>l.addEventListener('click',()=>{menuToggle.classList.remove('active'); mainNav.classList.remove('active');}));
+
+      const els=document.querySelectorAll('.reveal');
+      const io=new IntersectionObserver((ents,obs)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.1});
+      els.forEach(el=>io.observe(el));
+    });
+  </script>
+
+  <script>
+    (function(){
+      function notify(reason,detail){try{parent.postMessage({type:'preview-link-click',reason,detail},'*')}catch(e){}}
+      try{var base=document.createElement('base'); base.href='about:blank'; document.head.appendChild(base);}catch(e){}
+      var fallbacks=['/fallback1.jpg','/fallback2.jpg']; var i=0;
+      Array.prototype.forEach.call(document.images,function(img){
+        img.addEventListener('error',function(e){if(i<fallbacks.length){var el=e.target; el.onerror=null; el.src=fallbacks[i++];}}, {once:true});
+      });
+      document.addEventListener('click',function(e){
+        var el=e.target && (e.target.closest?e.target.closest('a,area'):null);
+        if(el && el.getAttribute && (el.getAttribute('href')||el.getAttribute('xlink:href'))){
+          e.preventDefault(); e.stopPropagation(); var href=el.getAttribute('href')||el.getAttribute('xlink:href'); notify('anchor',{href}); return false;
+        }
+      }, true);
+      document.addEventListener('submit',function(e){e.preventDefault(); e.stopPropagation(); notify('form'); return false;}, true);
+      try{window.location.assign=function(u){notify('js-location-assign',{url:u});};}catch(e){}
+      try{window.location.replace=function(u){notify('js-location-replace',{url:u});};}catch(e){}
+      try{window.open=function(){notify('window-open'); return null;};}catch(e){}
+      try{history.pushState=function(s,t,u){notify('history-push',{url:u});}; history.replaceState=function(s,t,u){notify('history-replace',{url:u});};}catch(e){}
+      window.addEventListener('beforeunload',function(e){e.preventDefault(); notify('beforeunload'); return '';});
+    })();
+  </script>
+</body>
+</html>

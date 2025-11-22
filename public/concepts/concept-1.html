@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="about:blank">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>AURA | Luxury Properties in Skopje</title>
+  <style>
+    :root{
+      --primary-color:#1a1a1a;--secondary-color:#ffffff;--accent-color:#C0B283;
+      --light-gray:#f7f7f7;--text-color:#333333;--font-main:'Poppins',sans-serif;--font-headings:'Playfair Display',serif;
+      /* Reserve space for fixed header (works great inside small iframes) */
+      --header-h: clamp(56px, 8vh, 88px);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{
+      font-family:var(--font-main);color:var(--text-color);background:var(--secondary-color);line-height:1.6;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;
+      padding-top:var(--header-h); /* ← keeps hero clear of the fixed header */
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap');
+    h1,h2,h3{font-family:var(--font-headings);font-weight:700;color:var(--primary-color);line-height:1.2}
+    h1{font-size:clamp(1.8rem, 5.6vw, 3.2rem);margin-bottom:1rem}
+    h2{font-size:clamp(1.4rem, 3.8vw, 2.2rem);margin-bottom:2rem;text-align:center}
+    h3{font-size:1.35rem;margin-bottom:.5rem}
+    p{margin-bottom:1rem;color:#555}
+    .container{max-width:1200px;margin:0 auto;padding:0 2rem}
+    section{padding:clamp(2.8rem,6vh,6rem) 0;overflow:hidden}
+    .fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s ease-out,transform .8s ease-out}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+
+    /* Header */
+    .main-header{
+      position:fixed;top:0;left:0;width:100%;z-index:1000;
+      padding:.85rem 0;transition:background-color .3s ease,padding .3s ease,box-shadow .3s ease
+    }
+    .main-header.scrolled{background:rgba(255,255,255,.95);padding:.7rem 0;box-shadow:0 2px 10px rgba(0,0,0,.05);backdrop-filter:blur(10px)}
+    .navbar{display:flex;justify-content:space-between;align-items:center}
+    .logo{font-family:var(--font-headings);font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:700;text-decoration:none;color:var(--primary-color);letter-spacing:.5px}
+    .logo span{color:var(--accent-color)}
+    .nav-links{display:flex;list-style:none}
+    .nav-links li{margin-left:clamp(1rem,2.5vw,2rem)}
+    .nav-links a{text-decoration:none;color:var(--primary-color);font-weight:400;position:relative;padding-bottom:.5rem;transition:color .3s ease}
+    .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent-color);transition:width .3s ease}
+    .nav-links a:hover,.nav-links a.active{color:var(--accent-color)}
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .menu-toggle{display:none}
+
+    /* Hero */
+    .hero{
+      height:clamp(420px, 70vh, 620px);
+      display:flex;align-items:center;justify-content:flex-start;color:var(--secondary-color);
+      background:linear-gradient(to right,rgba(0,0,0,.6),rgba(0,0,0,.1)),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1770&q=80') center/cover no-repeat;
+      position:relative;animation:ken-burns 20s infinite
+    }
+    @keyframes ken-burns{0%{background-size:100% 100%}50%{background-size:110% 110%}100%{background-size:100% 100%}}
+    .hero-content{max-width:600px}
+    .hero-content h1{color:var(--secondary-color)}
+    .hero-content p{font-size:clamp(1rem,1.2vw + .2rem,1.2rem);margin-bottom:1.4rem;font-weight:300;color:rgba(255,255,255,.9)}
+    .btn{display:inline-block;padding:.75rem 1.6rem;text-decoration:none;border-radius:50px;font-weight:600;transition:all .3s ease;cursor:pointer;border:2px solid transparent}
+    .btn-primary{background:var(--accent-color);color:var(--secondary-color);border-color:var(--accent-color)}
+    .btn-primary:hover{background:transparent;color:var(--accent-color)}
+    .btn-outline{background:transparent;color:var(--primary-color);border-color:var(--primary-color)}
+    .btn-outline:hover{background:var(--primary-color);color:var(--secondary-color)}
+
+    /* About */
+    #about{background:var(--light-gray)}
+    .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:2.2rem;align-items:center}
+    .about-image-wrapper{position:relative;border-radius:5px;overflow:hidden;box-shadow:0 15px 30px rgba(0,0,0,.1)}
+    .about-image-wrapper::before{content:'';position:absolute;top:-20px;left:-20px;width:80%;height:80%;border:5px solid var(--accent-color);z-index:-1;opacity:.5}
+    .about-image-wrapper img{width:100%;height:auto;display:block}
+    .about-content h2{text-align:left}
+
+    /* Properties */
+    .property-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+    .property-card{background:var(--secondary-color);box-shadow:0 5px 25px rgba(0,0,0,.07);border-radius:5px;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease}
+    .property-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(0,0,0,.1)}
+    .property-image{height:250px;overflow:hidden}
+    .property-image img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+    .property-card:hover .property-image img{transform:scale(1.05)}
+    .property-details{padding:1.25rem}
+    .property-details h3{color:var(--primary-color)}
+    .property-price{font-size:1.1rem;font-weight:600;color:var(--accent-color);margin-bottom:.6rem}
+    .property-features{display:flex;gap:1.1rem;margin-top:.8rem;padding-top:.8rem;border-top:1px solid #eee;color:#777;flex-wrap:wrap}
+    .property-features span{display:flex;align-items:center;gap:.45rem}
+    .property-features svg{width:18px;height:18px;fill:var(--accent-color)}
+
+    /* Services */
+    #services{background:var(--light-gray)}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;text-align:center}
+    .service-item{padding:1.6rem}
+    .service-icon{width:56px;height:56px;margin:0 auto 1.1rem;color:var(--accent-color)}
+
+    /* Contact */
+    .contact-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:2.2rem;align-items:center}
+    .contact-info p{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem;font-size:1.05rem}
+    .contact-info svg{width:22px;height:22px;color:var(--accent-color)}
+    .contact-form .form-group{margin-bottom:1rem}
+    .contact-form input,.contact-form textarea{width:100%;padding:.9rem;border:1px solid #ddd;border-radius:5px;font-family:var(--font-main);font-size:1rem;transition:border-color .3s ease}
+    .contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--accent-color)}
+    .contact-form textarea{resize:vertical;min-height:150px}
+
+    /* Footer */
+    footer{background:var(--primary-color);color:rgba(255,255,255,.7);padding:3rem 0 2rem;text-align:center}
+    .footer-content{border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:1.4rem;margin-bottom:1.4rem}
+    .footer-logo{font-family:var(--font-headings);font-size:1.8rem;color:var(--secondary-color);text-decoration:none}
+    .footer-logo span{color:var(--accent-color)}
+    .footer-socials{list-style:none;display:flex;justify-content:center;gap:1rem;margin-top:1rem}
+    .footer-socials a{color:var(--secondary-color);font-size:1.1rem;transition:color .3s ease}
+    .footer-socials a:hover{color:var(--accent-color)}
+    .copyright{font-size:.9rem}
+
+    /* Embed/Small height optimizations */
+    @media (max-height:720px),(max-width:992px){
+      .main-header{background:rgba(255,255,255,.96);box-shadow:0 2px 10px rgba(0,0,0,.05);backdrop-filter:blur(8px)}
+      .nav-links li{margin-left:1.25rem}
+    }
+
+    /* Tablet/phone */
+    @media (max-width:992px){
+      .about-grid{grid-template-columns:1fr}
+      .property-grid{grid-template-columns:1fr 1fr}
+      .contact-wrapper{grid-template-columns:1fr}
+      .about-image-wrapper{max-width:500px;margin:0 auto 1.6rem}
+      .about-content h2{text-align:center}
+      .about-content{text-align:center}
+    }
+    @media (max-width:768px){
+      html{font-size:15px}
+      .container{padding:0 1rem}
+      .nav-links{
+        position:fixed;top:0;right:-100%;width:70%;height:100vh;background:var(--secondary-color);
+        flex-direction:column;align-items:center;justify-content:center;box-shadow:-5px 0 15px rgba(0,0,0,.1);transition:right .4s ease-in-out
+      }
+      .nav-links.nav-active{right:0}
+      .nav-links li{margin:1.25rem 0}
+      .nav-links a{font-size:1.1rem}
+      .menu-toggle{display:block;cursor:pointer;z-index:1001;background:none;border:none}
+      .hamburger{width:25px;height:2px;background:var(--primary-color);display:block;position:relative;transition:background-color .3s}
+      .hamburger::before,.hamburger::after{content:'';position:absolute;width:25px;height:2px;background:var(--primary-color);left:0;transition:transform .3s ease-in-out}
+      .hamburger::before{top:-8px} .hamburger::after{bottom:-8px}
+      .nav-active .hamburger{background:transparent}
+      .nav-active .hamburger::before{transform:rotate(45deg) translate(5px,6px)}
+      .nav-active .hamburger::after{transform:rotate(-45deg) translate(5px,-6px)}
+      .property-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="container navbar">
+      <a href="#hero" class="logo">AURA<span>.</span></a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu"><span class="hamburger"></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="container">
+        <div class="hero-content fade-in visible">
+          <h1>Experience Luxury Living in Skopje</h1>
+          <p>A premier real estate company for luxury properties, defined by modern light design and unparalleled comfort.</p>
+          <a href="#properties" class="btn btn-primary">View Properties</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="about-grid fade-in visible">
+          <div class="about-image-wrapper">
+            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1674&q=80" alt="Modern luxurious house with pool" onerror="this.onerror=null;this.src='/fallback1.jpg'">
+          </div>
+          <div class="about-content">
+            <h2>Redefining Modern Elegance</h2>
+            <p>AURA is a boutique real estate company specializing in exclusive luxury properties throughout Skopje. Our curated portfolio showcases homes with striking modern light design, embodying sophistication and contemporary living.</p>
+            <p>We are dedicated to providing a bespoke and seamless experience for discerning clients, connecting them with properties that are not just homes, but lifestyle statements.</p>
+            <a href="#contact" class="btn btn-outline">Get In Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="properties">
+      <div class="container">
+        <h2 class="fade-in visible">Featured Properties</h2>
+        <div class="property-grid">
+          <div class="property-card fade-in visible" style="transition-delay:100ms">
+            <div class="property-image">
+              <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1770&q=80" alt="Stunning modern villa exterior" onerror="this.onerror=null;this.src='/fallback2.jpg'">
+            </div>
+            <div class="property-details">
+              <h3>The Vodno Villa</h3>
+              <div class="property-price">Price on Request</div>
+              <p>An architectural masterpiece with panoramic city views, offering ultimate privacy and luxury.</p>
+              <div class="property-features">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11.25H3v9.75h18v-9.75zm-1.5 8.25H4.5v-6.75h15v6.75zM21.75 6H2.25a.75.75 0 00-.75.75v1.5c0 .414.336.75.75.75h19.5a.75.75 0 00.75-.75v-1.5a.75.75 0 00-.75-.75z"/></svg>4 Bed</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 9.139a.75.75 0 01.75.75v10.5a.75.75 0 01-1.5 0v-4.63c-3.418.903-6.99 1.129-10.5 1.129s-7.082-.226-10.5-1.129V20.25a.75.75 0 01-1.5 0v-10.5a.75.75 0 01.75-.75c3.67 1.012 7.6 1.36 11.25 1.36s7.58-.348 11.25-1.36z"/></svg>5 Bath</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 6.75v10.5a4.5 4.5 0 01-4.5 4.5h-10.5a4.5 4.5 0 01-4.5-4.5V6.75a4.5 4.5 0 014.5-4.5h10.5a4.5 4.5 0 014.5 4.5zM12 8.25a.75.75 0 00-.75.75v3.25H8.25a.75.75 0 000 1.5h3.25V17a.75.75 0 001.5 0v-3.25h3.25a.75.75 0 000-1.5h-3.25V9a.75.75 0 00-.75-.75z"/></svg>450 m²</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="property-card fade-in visible" style="transition-delay:200ms">
+            <div class="property-image">
+              <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1770&q=80" alt="Bright modern interior living room" onerror="this.onerror=null;this.src='/fallback1.jpg'">
+            </div>
+            <div class="property-details">
+              <h3>Panorama Residence</h3>
+              <div class="property-price">€ 850,000</div>
+              <p>Floor-to-ceiling windows and open-plan living define this stunning city apartment.</p>
+              <div class="property-features">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11.25H3v9.75h18v-9.75zm-1.5 8.25H4.5v-6.75h15v6.75zM21.75 6H2.25a.75.75 0 00-.75.75v1.5c0 .414.336.75.75.75h19.5a.75.75 0 00.75-.75v-1.5a.75.75 0 00-.75-.75z"/></svg>3 Bed</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 9.139a.75.75 0 01.75.75v10.5a.75.75 0 01-1.5 0v-4.63c-3.418.903-6.99 1.129-10.5 1.129s-7.082-.226-10.5-1.129V20.25a.75.75 0 01-1.5 0v-10.5a.75.75 0 01.75-.75c3.67 1.012 7.6 1.36 11.25 1.36s7.58-.348 11.25-1.36z"/></svg>3 Bath</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 6.75v10.5a4.5 4.5 0 01-4.5 4.5h-10.5a4.5 4.5 0 01-4.5-4.5V6.75a4.5 4.5 0 014.5-4.5h10.5a4.5 4.5 0 014.5 4.5zM12 8.25a.75.75 0 00-.75.75v3.25H8.25a.75.75 0 000 1.5h3.25V17a.75.75 0 001.5 0v-3.25h3.25a.75.75 0 000-1.5h-3.25V9a.75.75 0 00-.75-.75z"/></svg>280 m²</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="property-card fade-in visible" style="transition-delay:300ms">
+            <div class="property-image">
+              <img src="https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=1770&q=80" alt="Minimalist penthouse with large windows" onerror="this.onerror=null;this.src='/fallback2.jpg'">
+            </div>
+            <div class="property-details">
+              <h3>Urban Oasis Penthouse</h3>
+              <div class="property-price">€ 620,000</div>
+              <p>A serene retreat in the heart of the city, featuring a private terrace and minimalist design.</p>
+              <div class="property-features">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11.25H3v9.75h18v-9.75zm-1.5 8.25H4.5v-6.75h15v6.75zM21.75 6H2.25a.75.75 0 00-.75.75v1.5c0 .414.336.75.75.75h19.5a.75.75 0 00.75-.75v-1.5a.75.75 0 00-.75-.75z"/></svg>2 Bed</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 9.139a.75.75 0 01.75.75v10.5a.75.75 0 01-1.5 0v-4.63c-3.418.903-6.99 1.129-10.5 1.129s-7.082-.226-10.5-1.129V20.25a.75.75 0 01-1.5 0v-10.5a.75.75 0 01.75-.75c3.67 1.012 7.6 1.36 11.25 1.36s7.58-.348 11.25-1.36z"/></svg>3 Bath</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.75 6.75v10.5a4.5 4.5 0 01-4.5 4.5h-10.5a4.5 4.5 0 01-4.5-4.5V6.75a4.5 4.5 0 014.5-4.5h10.5a4.5 4.5 0 014.5 4.5zM12 8.25a.75.75 0 00-.75.75v3.25H8.25a.75.75 0 000 1.5h3.25V17a.75.75 0 001.5 0v-3.25h3.25a.75.75 0 000-1.5h-3.25V9a.75.75 0 00-.75-.75z"/></svg>210 m²</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="fade-in visible">
+      <div class="container">
+        <h2 class="fade-in visible">Our Commitment</h2>
+        <div class="services-grid">
+          <div class="service-item fade-in visible" style="transition-delay:100ms">
+            <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.493 3.308a.75.75 0 00-1.006.02l-7.5 9.167a.75.75 0 00.513 1.255h2.75a.75.75 0 01.75.75v6a.75.75 0 00.75.75h2.5a.75.75 0 00.75-.75v-3.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V21a.75.75 0 00.75.75h2.5a.75.75 0 00.75-.75v-6a.75.75 0 01.75-.75h2.75a.75.75 0 00.513-1.255l-7.5-9.167a.75.75 0 00-.994-.02z"></path></svg>
+            <h3>Exclusive Listings</h3>
+            <p>Access to a portfolio of Skopje's finest properties, many of which are not available on the open market.</p>
+          </div>
+          <div class="service-item fade-in visible" style="transition-delay:200ms">
+            <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12.963 2.286a.75.75 0 00-1.071 1.05l.992 1.026-1.072 1.072a.75.75 0 101.072 1.072l1.072-1.072.992 1.026a.75.75 0 101.071-1.05l-1.529-1.575a.75.75 0 00-1.071 0l-1.529 1.575a.75.75 0 101.071 1.05l.992-1.026 1.072 1.072a.75.75 0 101.072-1.072l-1.072-1.072.992-1.026a.75.75 0 10-1.071-1.05l-1.529 1.575a.75.75 0 00-1.071 0L12.963 2.286zM8.25 8.625a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM15.75 8.625a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0zM10.5 14.25a.75.75 0 00-1.5 0v.75c0 .414.336.75.75.75h3a.75.75 0 00.75-.75v-.75a.75.75 0 00-1.5 0v.008h-.75v-.008z" clip-rule="evenodd"></path></svg>
+            <h3>Expert Agents</h3>
+            <p>Experienced agents with deep market knowledge and personalized guidance.</p>
+          </div>
+          <div class="service-item fade-in visible" style="transition-delay:300ms">
+            <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69a.75.75 0 01.981.981A10.501 10.501 0 0118 16.5a10.5 10.5 0 01-10.5-10.5c0-1.745.43-3.412 1.196-4.945a.75.75 0 01.832-.136zm-3.322 2.404a.75.75 0 00-1.06-1.06L3.468 4.755a.75.75 0 001.06 1.06l1.678-1.677zM9.593 14.44a.75.75 0 00-1.06-1.06L3.468 18.445a.75.75 0 001.06 1.06l5.065-5.065z" clip-rule="evenodd"></path></svg>
+            <h3>Seamless Process</h3>
+            <p>From viewing to closing — a smooth, transparent and efficient experience.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 class="fade-in visible">Connect With Us</h2>
+        <div class="contact-wrapper fade-in visible">
+          <div class="contact-info">
+            <h3>Start the Conversation</h3>
+            <p>Whether you are looking to buy or sell a luxury property in Skopje, our team is ready to assist you.</p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 005.169-4.4c1.52-2.146 2.023-4.145 2.023-6.142 0-3.866-3.582-7-8-7s-8 3.134-8 7c0 1.996.503 3.996 2.023 6.142a16.975 16.975 0 005.169 4.4z"/></svg> Maksim Gorki St 17, Skopje 1000</p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 4.5a3 3 0 013-3h15a3 3 0 013 3v15a3 3 0 01-3 3h-15a3 3 0 01-3-3V4.5zM6.25 9a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6zm3.5 0a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6zm3.5 0a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6zm3.5 0a.75.75 0 00-1.5 0v6a.75.75 0 001.5 0v-6z"/></svg> +389 70 123 456</p>
+            <p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/></svg> contact@auraskopje.com</p>
+          </div>
+          <form class="contact-form">
+            <div class="form-group"><input type="text" id="name" name="name" placeholder="Your Name" required></div>
+            <div class="form-group"><input type="email" id="email" name="email" placeholder="Your Email" required></div>
+            <div class="form-group"><textarea id="message" name="message" placeholder="Your Message" required></textarea></div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <a href="#hero" class="footer-logo">AURA<span>.</span></a>
+        <ul class="footer-socials">
+          <li><a href="#" aria-label="Instagram">IG</a></li>
+          <li><a href="#" aria-label="Facebook">FB</a></li>
+          <li><a href="#" aria-label="LinkedIn">IN</a></li>
+        </ul>
+      </div>
+      <p class="copyright">© 2024 AURA Skopje. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const header=document.querySelector('.main-header');
+      window.addEventListener('scroll',()=>{if(window.scrollY>50){header.classList.add('scrolled')}else{header.classList.remove('scrolled')}});
+
+      const menuToggle=document.querySelector('.menu-toggle');
+      const navLinks=document.querySelector('.nav-links');
+      menuToggle.addEventListener('click',()=>{navLinks.classList.toggle('nav-active');menuToggle.classList.toggle('nav-active')});
+      document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('nav-active');menuToggle.classList.remove('nav-active')}));
+
+      const sections=document.querySelectorAll('section'); const navLi=document.querySelectorAll('.nav-links a');
+      window.addEventListener('scroll',()=>{let current=''; sections.forEach(s=>{const top=s.offsetTop;const h=s.clientHeight; if(pageYOffset>=(top-h/3)) current=s.id;}); navLi.forEach(a=>{a.classList.remove('active'); if(a.getAttribute('href').substring(1)===current)a.classList.add('active');});});
+
+      const faders=document.querySelectorAll('.fade-in');
+      const io=new IntersectionObserver((entries,obs)=>{entries.forEach(e=>{if(!e.isIntersecting)return; e.target.classList.add('visible'); obs.unobserve(e.target);});},{threshold:.2,rootMargin:"0px 0px -50px 0px"});
+      faders.forEach(f=>io.observe(f));
+
+      const form=document.querySelector('.contact-form');
+      form.addEventListener('submit',e=>{e.preventDefault(); alert('Thank you for your message! We will get back to you shortly.'); form.reset();});
+    });
+  </script>
+
+  <script>
+    (function(){
+      function notify(reason, detail){
+        try{ parent.postMessage({type:'preview-link-click',reason,detail},'*'); }catch(e){}
+      }
+      try{var base=document.createElement('base'); base.href='about:blank'; document.head.appendChild(base);}catch(e){}
+      var fallbacks=['/fallback1.jpg','/fallback2.jpg']; var i=0;
+      Array.prototype.forEach.call(document.images,function(img){
+        img.addEventListener('error',function(e){ if(i<fallbacks.length){var el=e.target; el.onerror=null; el.src=fallbacks[i++];}}, {once:true});
+      });
+      document.addEventListener('click',function(e){
+        var el=e.target && (e.target.closest?e.target.closest('a,area'):null);
+        if(el && el.getAttribute && (el.getAttribute('href')||el.getAttribute('xlink:href'))){
+          e.preventDefault(); e.stopPropagation(); var href=el.getAttribute('href')||el.getAttribute('xlink:href'); notify('anchor',{href}); return false;
+        }
+      }, true);
+      document.addEventListener('submit',function(e){e.preventDefault(); e.stopPropagation(); notify('form'); return false;}, true);
+      try{window.location.assign=function(u){notify('js-location-assign',{url:u});};}catch(e){}
+      try{window.location.replace=function(u){notify('js-location-replace',{url:u});};}catch(e){}
+      try{window.open=function(){notify('window-open'); return null;};}catch(e){}
+      try{history.pushState=function(s,t,u){notify('history-push',{url:u});}; history.replaceState=function(s,t,u){notify('history-replace',{url:u});};}catch(e){}
+      window.addEventListener('beforeunload',function(e){e.preventDefault(); notify('beforeunload'); return '';});
+    })();
+  </script>
+</body>
+</html>
