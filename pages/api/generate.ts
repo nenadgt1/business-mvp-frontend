@@ -1,7 +1,9 @@
 // frontend/pages/api/generate.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const API_BASE = process.env.API_BASE; // e.g. http://localhost:8080 or https://api.yourdomain.tld
+// Remove any trailing slashes so we never get "//api/generate"
+const rawBase = process.env.API_BASE || "";
+const API_BASE = rawBase.replace(/\/+$/, ""); // trims one or more "/" at the end
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -20,6 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const text = await r.text();
     res.status(r.status).send(text);
   } catch (e: any) {
-    res.status(502).json({ error: "Proxy error", details: e?.message || String(e) });
+    res
+      .status(502)
+      .json({ error: "Proxy error", details: e?.message || String(e) });
   }
 }
